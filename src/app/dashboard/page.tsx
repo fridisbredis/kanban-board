@@ -5,15 +5,16 @@ import Link from "next/link";
 import CreateBoardForm from "@/components/CreateBoardForm";
 import DeleteBoardButton from "@/components/DeleteBoardButton";
 import { colors, cardSurfaceStyle, BOARD_ACCENTS } from "@/lib/styles";
+import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
     const session = await getServerSession(authOptions);
-    const myBoards = session?.user?.id
-        ? await prisma.board.findMany({
-            where: { ownerId: session.user.id },
-            orderBy: { createdAt: "desc" },
-        })
-        : [];
+    if (!session?.user?.id) redirect("/login");
+
+    const myBoards = await prisma.board.findMany({
+        where: { ownerId: session.user.id },
+        orderBy: { createdAt: "desc" },
+    });
 
     return (
         <div className="min-h-screen" style={{ background: colors.cream }}>
