@@ -17,6 +17,7 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
+    "noImplicitAny": true,
     "plugins": [
       {
         "name": "next"
@@ -39,5 +40,4 @@
   "exclude": [
     "node_modules"
   ],
-  "noImplicitAny": true
 }
