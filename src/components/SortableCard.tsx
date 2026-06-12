@@ -24,11 +24,11 @@ export default function SortableCard({ card, isActive, onClick }: {
     return (
         <div
             ref={setNodeRef}
-            style={style}
+            className={`rounded-xl px-3 py-2.5 cursor-grab transition-all duration-150 hover:-translate-y-px hover:shadow-sm bg-white ${isActive ? 'ring-2' : ''}`}
             {...attributes}
             {...listeners}
-            className={`rounded-xl px-3 py-2.5 cursor-grab transition-all duration-150 hover:-translate-y-px hover:shadow-sm bg-white ${isActive ? 'ring-2' : ''}`}
             {...(isActive ? { style: { ...style, outline: `2px solid ${colors.accent}` } } : {})}
+            style={{ ...style, ...(isActive ? { outline: `2px solid ${colors.accent}` } : {}) }}
             onClick={onClick}
         >
             <p className="text-sm font-medium leading-snug" style={{ color: colors.text }}>

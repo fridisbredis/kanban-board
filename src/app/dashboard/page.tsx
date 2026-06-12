@@ -5,7 +5,10 @@ import Link from "next/link";
 import CreateBoardForm from "@/components/CreateBoardForm";
 import DeleteBoardButton from "@/components/DeleteBoardButton";
 import { colors, cardSurfaceStyle, BOARD_ACCENTS } from "@/lib/styles";
-import type { Board } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
+
+type Board = Prisma.BoardGetPayload<{}>;
+
 
 export default async function DashboardPage() {
     const session = await getServerSession(authOptions);
