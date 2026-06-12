@@ -5,10 +5,6 @@ import Link from "next/link";
 import CreateBoardForm from "@/components/CreateBoardForm";
 import DeleteBoardButton from "@/components/DeleteBoardButton";
 import { colors, cardSurfaceStyle, BOARD_ACCENTS } from "@/lib/styles";
-import type { Prisma } from "@prisma/client";
-
-type Board = Prisma.BoardGetPayload<{}>;
-
 
 export default async function DashboardPage() {
     const session = await getServerSession(authOptions);
@@ -54,7 +50,7 @@ export default async function DashboardPage() {
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {myBoards.map((board: Board, i: number) => {
+                            {myBoards.map((board, i) => {
                                 const accent = BOARD_ACCENTS[i % BOARD_ACCENTS.length];
                                 return (
                                     <div key={board.id} className="relative group">
