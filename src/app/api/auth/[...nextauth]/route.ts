@@ -1,12 +1,16 @@
+import "dotenv/config";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import AzureADProvider from "next-auth/providers/azure-ad";
 
 export const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter(prisma),
     session: { strategy: "jwt" },
+    debug: true,
+
     providers: [
         CredentialsProvider({
             name: "credentials",
@@ -28,6 +32,12 @@ export const authOptions: NextAuthOptions = {
 
                 return { id: user.id, email: user.email, name: user.name };
             },
+        }),
+        AzureADProvider({
+            clientId: process.env.AZURE_AD_CLIENT_ID!,
+            clientSecret: process.env.AZURE_AD_CLIENT_SECRET!,
+            tenantId: process.env.AZURE_AD_TENANT_ID!,
+            allowDangerousEmailAccountLinking: true,
         }),
     ],
     pages: {

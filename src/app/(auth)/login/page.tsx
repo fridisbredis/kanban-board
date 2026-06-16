@@ -7,6 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Link from "next/link";
 import { colors, inputClass, inputStyle } from "@/lib/styles";
+import { EyeOff, Eye } from "lucide-react";
+import { useState } from "react";
 
 const LoginSchema = z.object({
     email: z.email("Invalid email"),
@@ -20,6 +22,7 @@ export default function LoginPage() {
     const { register, handleSubmit, formState: { errors, isSubmitting }, setError } = useForm<FormData>({
         resolver: zodResolver(LoginSchema),
     });
+    const [showPassword, setShowPassword] = useState(false)
 
     const onSubmit = async (data: FormData) => {
         const result = await signIn("credentials", {
@@ -72,14 +75,23 @@ export default function LoginPage() {
                         <label className="text-xs font-medium uppercase tracking-wide" style={{ color: colors.muted }}>
                             Password
                         </label>
-                        <input
-                            {...register("password")}
-                            type="password"
-                            className={inputClass}
-                            style={inputStyle}
-                            onFocus={e => (e.target.style.borderColor = colors.accent)}
-                            onBlur={e => (e.target.style.borderColor = colors.border)}
-                        />
+                        <div className="relative">
+                            <input
+                                {...register("password")}
+                                type={showPassword ? "text" : "password"}
+                                className={inputClass}
+                                style={inputStyle}
+                                onFocus={e => (e.target.style.borderColor = colors.accent)}
+                                onBlur={e => (e.target.style.borderColor = colors.border)}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                            >
+                                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                            </button>
+                        </div>
                         {errors.password && (
                             <p className="text-xs" style={{ color: colors.errorText }}>{errors.password.message}</p>
                         )}
@@ -100,6 +112,20 @@ export default function LoginPage() {
                         {isSubmitting ? "Signing in..." : "Sign in"}
                     </button>
                 </form>
+                <button
+                    type="button"
+                    onClick={() => signIn("azure-ad", { callbackUrl: "/dashboard" })}
+                    className="w-full border rounded-xl py-2.5 mt-4 text-sm font-semibold hover:bg-gray-50 transition flex items-center justify-center gap-2"
+                    style={{ borderColor: colors.border }}
+                >
+                    <svg width="16" height="16" viewBox="0 0 21 21" fill="none">
+                        <path d="M10 0H0v10h10V0z" fill="#F25022" />
+                        <path d="M21 0H11v10h10V0z" fill="#7FBA00" />
+                        <path d="M10 11H0v10h10V11z" fill="#00A4EF" />
+                        <path d="M21 11H11v10h10V11z" fill="#FFB900" />
+                    </svg>
+                    Sign in with Microsoft
+                </button>
 
                 <p className="text-sm text-center mt-5" style={{ color: colors.muted }}>
                     No account?{" "}

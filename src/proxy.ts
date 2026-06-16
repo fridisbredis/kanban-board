@@ -14,12 +14,15 @@ export default withAuth(
         return NextResponse.next();
     },
     {
+        callbacks: {
+            authorized: ({ req }) => {
+                const isAuthPage = req.nextUrl.pathname.startsWith("/login") ||
+                    req.nextUrl.pathname.startsWith("/register");
+                return isAuthPage ? true : !!req.cookies.get("next-auth.session-token");
+            },
+        },
         pages: {
             signIn: "/login",
         },
     }
 );
-
-export const config = {
-    matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
-};
