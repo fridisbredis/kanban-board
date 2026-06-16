@@ -22,9 +22,15 @@ export default withAuth(
             authorized: ({ req }) => {
                 const isAuthPage = req.nextUrl.pathname.startsWith("/login") ||
                     req.nextUrl.pathname.startsWith("/register");
-                return isAuthPage ? true : !!req.cookies.get("next-auth.session-token");
+
+                const hasSession =
+                    !!req.cookies.get("next-auth.session-token") ||
+                    !!req.cookies.get("__Secure-next-auth.session-token");
+
+                return isAuthPage ? true : hasSession;
             },
         },
+
         pages: {
             signIn: "/login",
         },
