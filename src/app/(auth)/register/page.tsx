@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Link from "next/link";
 import { colors, inputClass, inputStyle } from "@/lib/styles";
+import { useState } from "react";
+import { EyeOff, Eye } from "lucide-react";
 
 const RegisterSchema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
@@ -20,6 +22,8 @@ export default function RegisterPage() {
     const { register, handleSubmit, formState: { errors, isSubmitting }, setError } = useForm<FormData>({
         resolver: zodResolver(RegisterSchema),
     });
+
+    const [showPassword, setShowPassword] = useState(false)
 
     const onSubmit = async (data: FormData) => {
         const res = await fetch("/api/register", {
@@ -89,14 +93,23 @@ export default function RegisterPage() {
                         <label className="text-xs font-medium uppercase tracking-wide" style={{ color: colors.muted }}>
                             Password
                         </label>
-                        <input
-                            {...register("password")}
-                            type="password"
-                            className={inputClass}
-                            style={inputStyle}
-                            onFocus={e => (e.target.style.borderColor = colors.accent)}
-                            onBlur={e => (e.target.style.borderColor = colors.border)}
-                        />
+                        <div className="relative">
+                            <input
+                                {...register("password")}
+                                type={showPassword ? "text" : "password"}
+                                className={inputClass}
+                                style={inputStyle}
+                                onFocus={e => (e.target.style.borderColor = colors.accent)}
+                                onBlur={e => (e.target.style.borderColor = colors.border)}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                            >
+                                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                            </button>
+                        </div>
                         {errors.password && (
                             <p className="text-xs" style={{ color: colors.errorText }}>{errors.password.message}</p>
                         )}

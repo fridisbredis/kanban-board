@@ -6,6 +6,7 @@ import CreateBoardForm from "@/components/CreateBoardForm";
 import DeleteBoardButton from "@/components/DeleteBoardButton";
 import { colors, cardSurfaceStyle, BOARD_ACCENTS } from "@/lib/styles";
 import { redirect } from "next/navigation";
+import SignOutButton from "@/components/SignOutButton";
 
 export default async function DashboardPage() {
     const session = await getServerSession(authOptions);
@@ -34,6 +35,7 @@ export default async function DashboardPage() {
                         >
                             {session.user.name?.[0]?.toUpperCase() ?? '?'}
                         </div>
+                        <SignOutButton />
                     </div>
                 )}
             </header>
