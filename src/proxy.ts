@@ -1,6 +1,10 @@
 import { withAuth } from "next-auth/middleware";
 import { NextResponse } from "next/server";
 
+export const config = {
+    matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+};
+
 export default withAuth(
     function middleware(req) {
         const isLoggedIn = !!req.nextauth.token;
@@ -25,4 +29,5 @@ export default withAuth(
             signIn: "/login",
         },
     }
+
 );
