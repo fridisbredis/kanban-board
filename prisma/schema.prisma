@@ -31,6 +31,8 @@ model Board {
   owner       User          @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   members     BoardMember[]
   columns     Column[]
+  categories  Category[]
+
 }
 
 model BoardMember {
@@ -68,10 +70,22 @@ model Card {
   updatedAt   DateTime  @updatedAt
   columnId    String
   assigneeId  String?
+  priority    String?
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   assignee    User?     @relation("CardAssignee", fields: [assigneeId], references: [id])
   column      Column    @relation(fields: [columnId], references: [id], onDelete: Cascade)
 
   @@index([columnId])
+}
+
+model Category {
+  id          String @id @default(cuid())
+  name        String
+  color       String?
+  boardId     String
+  board       Board  @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  cards       Card[]
 }
 
 model Account {

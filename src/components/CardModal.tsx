@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Card } from "@prisma/client";
+import { Card, Category } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { colors, inputClass, inputStyle, overlay } from "@/lib/styles";
@@ -10,12 +10,14 @@ const CardModalSchema = z.object({
     title: z.string().max(100),
     description: z.string().optional(),
     dueDate: z.string().optional(),
+    categoryId: z.string().nullable().optional(),
 });
 
 type FormData = z.infer<typeof CardModalSchema>;
 
-export default function CardModal({ card, onClose, onUpdate, onDelete }: {
+export default function CardModal({ card, categories, onClose, onUpdate, onDelete }: {
     card: Card;
+    categories: Category[];
     onClose: () => void;
     onUpdate: (updatedCard: Card) => void;
     onDelete: (cardId: string) => void;
@@ -26,6 +28,7 @@ export default function CardModal({ card, onClose, onUpdate, onDelete }: {
             title: card.title,
             description: card.description ?? '',
             dueDate: card.dueDate ? new Date(card.dueDate).toISOString().slice(0, 16) : '',
+            categoryId: card.categoryId ?? '',
         },
     });
 
@@ -34,6 +37,7 @@ export default function CardModal({ card, onClose, onUpdate, onDelete }: {
             title: data.title,
             ...(data.description ? { description: data.description } : {}),
             ...(data.dueDate ? { dueDate: new Date(data.dueDate).toISOString() } : {}),
+            categoryId: data.categoryId || null,
         };
 
         const res = await fetch(`/api/cards/${card.id}`, {
@@ -131,6 +135,26 @@ export default function CardModal({ card, onClose, onUpdate, onDelete }: {
                             onFocus={e => (e.target.style.borderColor = colors.accent)}
                             onBlur={e => (e.target.style.borderColor = colors.border)}
                         />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-xs font-medium uppercase tracking-wide" style={{ color: colors.muted }}>
+                            Category <span className="normal-case font-normal" style={{ color: colors.ghost }}>— optional</span>
+                        </label>
+                        <select
+                            {...register("categoryId")}
+                            className={inputClass}
+                            style={inputStyle}
+                            onFocus={e => (e.target.style.borderColor = colors.accent)}
+                            onBlur={e => (e.target.style.borderColor = colors.border)}
+                        >
+                            <option value="">No category</option>
+                            {categories.map(cat => (
+                                <option key={cat.id} value={cat.id}>
+                                    {cat.name}
+                                </option>
+                            ))}
+                        </select>
                     </div>
 
                     {errors.root && (

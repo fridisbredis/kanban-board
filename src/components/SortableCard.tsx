@@ -3,11 +3,12 @@
 import { defaultAnimateLayoutChanges, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Calendar } from "lucide-react";
-import type { Card } from "@prisma/client";
+import type { Card, Category } from "@prisma/client";
 import { colors } from "@/lib/styles";
 
-export default function SortableCard({ card, isActive, onClick }: {
+export default function SortableCard({ card, categories, isActive, onClick }: {
     card: Card;
+    categories: Category[];
     isActive: boolean;
     onClick: () => void;
 }) {
@@ -21,6 +22,8 @@ export default function SortableCard({ card, isActive, onClick }: {
         transition,
     };
 
+    const category = card.categoryId ? categories.find(c => c.id === card.categoryId) : null;
+
     return (
         <div
             ref={setNodeRef}
@@ -31,6 +34,17 @@ export default function SortableCard({ card, isActive, onClick }: {
             style={{ ...style, ...(isActive ? { outline: `2px solid ${colors.accent}` } : {}) }}
             onClick={onClick}
         >
+            {category && (
+                <span
+                    className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium mb-1.5"
+                    style={{
+                        background: category.color ? `${category.color}30` : colors.cream,
+                        color: category.color ?? colors.muted,
+                    }}
+                >
+                    {category.name}
+                </span>
+            )}
             <p className="text-sm font-medium leading-snug" style={{ color: colors.text }}>
                 {card.title}
             </p>

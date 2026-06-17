@@ -13,8 +13,8 @@ export default function DeleteBoardButton({ boardId }: { boardId: string }) {
         try {
             const res = await fetch(`/api/boards/${boardId}`, { method: "DELETE" });
             if (res.ok) router.refresh();
-        } catch (error) {
-            console.error("Error deleting board:", error);
+        } catch {
+            // silently ignore — the UI stays unchanged if the request fails
         }
     }
 

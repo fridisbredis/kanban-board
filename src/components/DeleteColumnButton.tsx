@@ -14,8 +14,8 @@ export default function DeleteColumnButton({ columnId, onDelete }: {
         try {
             const res = await fetch(`/api/columns/${columnId}`, { method: "DELETE" });
             if (res.ok) onDelete();
-        } catch (error) {
-            console.error("Error deleting column:", error);
+        } catch {
+            // silently ignore — the UI stays unchanged if the request fails
         }
     }
 

@@ -9,6 +9,7 @@ const CardUpdateSchema = z.object({
     dueDate: z.string().optional(),
     order: z.number().optional(),
     columnId: z.string().min(1).optional(),
+    categoryId: z.string().nullable().optional(),
 });
 
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
