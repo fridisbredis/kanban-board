@@ -9,6 +9,10 @@ export const colors = {
   accent: 'var(--accent)',
   accentHover: 'var(--accent-hover)',
   pop: 'var(--pop)',
+  // Priority palette — used for card priority indicators
+  priorityHigh: '#f87171',
+  priorityMedium: '#fbbf24',
+  priorityLow: '#86efac',
   // Danger palette — used for destructive actions
   dangerText: '#B45544',
   dangerBorder: '#EDD5D0',

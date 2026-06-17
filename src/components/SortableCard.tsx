@@ -24,6 +24,13 @@ export default function SortableCard({ card, categories, isActive, onClick }: {
 
     const category = card.categoryId ? categories.find(c => c.id === card.categoryId) : null;
 
+    const priorityFlag: Record<string, string> = {
+        High:   colors.priorityHigh,
+        Medium: colors.priorityMedium,
+        Low:    colors.priorityLow,
+    };
+    const priority = card.priority ? priorityFlag[card.priority] : null;
+
     return (
         <div
             ref={setNodeRef}
@@ -35,19 +42,30 @@ export default function SortableCard({ card, categories, isActive, onClick }: {
             onClick={onClick}
         >
             {category && (
-                <span
-                    className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium mb-1.5"
-                    style={{
-                        background: category.color ? `${category.color}30` : colors.cream,
-                        color: category.color ?? colors.muted,
-                    }}
-                >
-                    {category.name}
-                </span>
+                <div className="flex items-center gap-1.5 mb-1.5 flex-wrap">
+                    <span
+                        className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium"
+                        style={{
+                            background: category.color ? `${category.color}30` : colors.cream,
+                            color: category.color ?? colors.muted,
+                        }}
+                    >
+                        {category.name}
+                    </span>
+                </div>
             )}
-            <p className="text-sm font-medium leading-snug" style={{ color: colors.text }}>
-                {card.title}
-            </p>
+            <div className="flex items-center justify-between gap-2">
+                <p className="text-sm font-medium leading-snug" style={{ color: colors.text }}>
+                    {card.title}
+                </p>
+                {priority && (
+                    <span
+                        className="w-2 h-2 rounded-full flex-shrink-0"
+                        style={{ background: priority }}
+                        title={card.priority ?? undefined}
+                    />
+                )}
+            </div>
             {card.dueDate && (
                 <p className="text-xs mt-1 flex items-center gap-1" style={{ color: colors.muted }}>
                     <Calendar size={12} />

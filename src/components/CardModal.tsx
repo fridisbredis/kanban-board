@@ -6,11 +6,14 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { colors, inputClass, inputStyle, overlay } from "@/lib/styles";
 
+const PRIORITIES = ['High', 'Medium', 'Low'] as const;
+
 const CardModalSchema = z.object({
     title: z.string().max(100),
     description: z.string().optional(),
     dueDate: z.string().optional(),
     categoryId: z.string().nullable().optional(),
+    priority: z.enum(PRIORITIES).nullable().optional(),
 });
 
 type FormData = z.infer<typeof CardModalSchema>;
@@ -29,6 +32,7 @@ export default function CardModal({ card, categories, onClose, onUpdate, onDelet
             description: card.description ?? '',
             dueDate: card.dueDate ? new Date(card.dueDate).toISOString().slice(0, 16) : '',
             categoryId: card.categoryId ?? '',
+            priority: (card.priority as typeof PRIORITIES[number] | null) ?? null,
         },
     });
 
@@ -38,6 +42,7 @@ export default function CardModal({ card, categories, onClose, onUpdate, onDelet
             ...(data.description ? { description: data.description } : {}),
             ...(data.dueDate ? { dueDate: new Date(data.dueDate).toISOString() } : {}),
             categoryId: data.categoryId || null,
+            priority: data.priority || null,
         };
 
         const res = await fetch(`/api/cards/${card.id}`, {
@@ -153,6 +158,24 @@ export default function CardModal({ card, categories, onClose, onUpdate, onDelet
                                 <option key={cat.id} value={cat.id}>
                                     {cat.name}
                                 </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                        <label className="text-xs font-medium uppercase tracking-wide" style={{ color: colors.muted }}>
+                            Priority <span className="normal-case font-normal" style={{ color: colors.ghost }}>— optional</span>
+                        </label>
+                        <select
+                            {...register("priority")}
+                            className={inputClass}
+                            style={inputStyle}
+                            onFocus={e => (e.target.style.borderColor = colors.accent)}
+                            onBlur={e => (e.target.style.borderColor = colors.border)}
+                        >
+                            <option value="">No priority</option>
+                            {PRIORITIES.map(p => (
+                                <option key={p} value={p}>{p}</option>
                             ))}
                         </select>
                     </div>

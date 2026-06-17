@@ -10,6 +10,7 @@ const CardUpdateSchema = z.object({
     order: z.number().optional(),
     columnId: z.string().min(1).optional(),
     categoryId: z.string().nullable().optional(),
+    priority: z.enum(['High', 'Medium', 'Low']).nullable().optional(),
 });
 
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
