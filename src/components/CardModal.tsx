@@ -144,40 +144,50 @@ export default function CardModal({ card, categories, onClose, onUpdate, onDelet
 
                     <div className="flex flex-col gap-1.5">
                         <label className="text-xs font-medium uppercase tracking-wide" style={{ color: colors.muted }}>
-                            Category <span className="normal-case font-normal" style={{ color: colors.ghost }}>— optional</span>
+                            Priority <span className="normal-case font-normal" style={{ color: colors.ghost }}>— optional</span>
                         </label>
-                        <select
-                            {...register("categoryId")}
-                            className={inputClass}
-                            style={inputStyle}
-                            onFocus={e => (e.target.style.borderColor = colors.accent)}
-                            onBlur={e => (e.target.style.borderColor = colors.border)}
-                        >
-                            <option value="">No category</option>
-                            {categories.map(cat => (
-                                <option key={cat.id} value={cat.id}>
-                                    {cat.name}
-                                </option>
-                            ))}
-                        </select>
+                        <div className="relative">
+                            <select
+                                {...register("priority")}
+                                className={`${inputClass} appearance-none pr-10`}
+                                style={inputStyle}
+                                onFocus={e => (e.target.style.borderColor = colors.accent)}
+                                onBlur={e => (e.target.style.borderColor = colors.border)}
+                            >
+                                <option value="">No priority</option>
+                                {PRIORITIES.map(p => (
+                                    <option key={p} value={p}>{p}</option>
+                                ))}
+                            </select>
+                            <svg className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4" viewBox="0 0 16 16" fill="none">
+                                <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: colors.muted }} />
+                            </svg>
+                        </div>
                     </div>
 
                     <div className="flex flex-col gap-1.5">
                         <label className="text-xs font-medium uppercase tracking-wide" style={{ color: colors.muted }}>
-                            Priority <span className="normal-case font-normal" style={{ color: colors.ghost }}>— optional</span>
+                            Category <span className="normal-case font-normal" style={{ color: colors.ghost }}>— optional</span>
                         </label>
-                        <select
-                            {...register("priority")}
-                            className={inputClass}
-                            style={inputStyle}
-                            onFocus={e => (e.target.style.borderColor = colors.accent)}
-                            onBlur={e => (e.target.style.borderColor = colors.border)}
-                        >
-                            <option value="">No priority</option>
-                            {PRIORITIES.map(p => (
-                                <option key={p} value={p}>{p}</option>
-                            ))}
-                        </select>
+                        <div className="relative">
+                            <select
+                                {...register("categoryId")}
+                                className={`${inputClass} appearance-none pr-10`}
+                                style={inputStyle}
+                                onFocus={e => (e.target.style.borderColor = colors.accent)}
+                                onBlur={e => (e.target.style.borderColor = colors.border)}
+                            >
+                                <option value="">No category</option>
+                                {categories.map(cat => (
+                                    <option key={cat.id} value={cat.id}>
+                                        {cat.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <svg className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4" viewBox="0 0 16 16" fill="none">
+                                <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: colors.muted }} />
+                            </svg>
+                        </div>
                     </div>
 
                     {errors.root && (
