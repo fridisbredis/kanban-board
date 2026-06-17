@@ -36,12 +36,13 @@ export default function KanbanBoard({ columns: initialColumns, boardId }: { colu
     const [isOpen, setIsOpen] = useState(false);
     const [categoriesOpen, setCategoriesOpen] = useState(false);
     const [categories, setCategories] = useState<Category[]>([]);
+    const [categoriesLoading, setCategoriesLoading] = useState(true);
 
     useEffect(() => {
         fetch(`/api/categories?boardId=${boardId}`)
             .then(r => r.json())
-            .then(setCategories)
-            .catch(() => { });
+            .then(data => { setCategories(data); setCategoriesLoading(false); })
+            .catch(() => { setCategoriesLoading(false); });
     }, [boardId]);
 
     function handleDragStart(event: any) {
@@ -89,6 +90,11 @@ export default function KanbanBoard({ columns: initialColumns, boardId }: { colu
                     return col;
                 })
             );
+            fetch(`/api/cards/${dragged.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ columnId: targetColumn.id }),
+            });
             patchCardOrder(newSourceCards);
             patchCardOrder(newTargetCards);
         }
@@ -270,6 +276,7 @@ export default function KanbanBoard({ columns: initialColumns, boardId }: { colu
                                                 key={card.id}
                                                 card={card}
                                                 categories={categories}
+                                                categoriesLoading={categoriesLoading}
                                                 isActive={activeCard?.id === card.id}
                                                 onClick={() => setSelectedCard(card)}
                                             />
@@ -343,11 +350,13 @@ export default function KanbanBoard({ columns: initialColumns, boardId }: { colu
 
             <DragOverlay>
                 {activeCard ? (
-                    <div
-                        className="rounded-xl px-3 py-2.5 shadow-lg bg-white"
-                        style={{ border: `1px solid ${colors.border}` }}
-                    >
-                        <p className="text-sm font-medium" style={{ color: colors.text }}>{activeCard.title}</p>
+                    <div style={{ boxShadow: '0 8px 24px rgba(0,0,0,0.12)', borderRadius: '0.75rem' }}>
+                        <SortableCard
+                            card={activeCard}
+                            categories={categories}
+                            isActive={false}
+                            onClick={() => {}}
+                        />
                     </div>
                 ) : null}
             </DragOverlay>

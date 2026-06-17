@@ -6,9 +6,10 @@ import { Calendar } from "lucide-react";
 import type { Card, Category } from "@prisma/client";
 import { colors } from "@/lib/styles";
 
-export default function SortableCard({ card, categories, isActive, onClick }: {
+export default function SortableCard({ card, categories, categoriesLoading, isActive, onClick }: {
     card: Card;
     categories: Category[];
+    categoriesLoading?: boolean;
     isActive: boolean;
     onClick: () => void;
 }) {
@@ -41,17 +42,21 @@ export default function SortableCard({ card, categories, isActive, onClick }: {
             style={{ ...style, ...(isActive ? { outline: `2px solid ${colors.accent}` } : {}) }}
             onClick={onClick}
         >
-            {category && (
+            {(category || (categoriesLoading && card.categoryId)) && (
                 <div className="flex items-center gap-1.5 mb-1.5 flex-wrap">
-                    <span
-                        className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium"
-                        style={{
-                            background: category.color ? `${category.color}30` : colors.cream,
-                            color: category.color ?? colors.muted,
-                        }}
-                    >
-                        {category.name}
-                    </span>
+                    {category ? (
+                        <span
+                            className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium"
+                            style={{
+                                background: category.color ? `${category.color}30` : colors.cream,
+                                color: category.color ?? colors.muted,
+                            }}
+                        >
+                            {category.name}
+                        </span>
+                    ) : (
+                        <span className="inline-flex rounded-full h-5 w-16 animate-pulse" style={{ background: colors.cream }} />
+                    )}
                 </div>
             )}
             <div className="flex items-center justify-between gap-2">
